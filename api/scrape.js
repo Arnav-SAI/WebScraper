@@ -39,6 +39,8 @@ module.exports = async (req, res) => {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
         'Accept-Language': 'en-US,en;q=0.5',
         'Connection': 'keep-alive',
+        'Referer': 'https://www.google.com/',
+        'Upgrade-Insecure-Requests': '1',
       },
     });
     console.log('Received response from URL, status:', response.status);
@@ -61,7 +63,7 @@ module.exports = async (req, res) => {
 
     // Extract content from specific elements, avoiding duplicates
     const contentSet = new Set(); // Use a Set to avoid duplicates
-    // Target main content areas, but only process leaf nodes (elements with no children containing text)
+    // Target main content areas, but only process leaf nodes
     const selectors = 'main, [role="main"], form, p, h1, h2, h3, h4, h5, h6, label, span, div:not([role="navigation"], [role="banner"])';
     $(selectors).each((i, elem) => {
       // Skip if the element has children that are also in the selector (to avoid duplicates)
@@ -79,8 +81,19 @@ module.exports = async (req, res) => {
           text += ` ${placeholder}`;
         }
       });
+      // Get aria-label or value attributes as fallback for dynamic content
+      const ariaLabel = $(elem).attr('aria-label')?.trim();
+      if (ariaLabel) {
+        text += ` ${ariaLabel}`;
+      }
+      const value = $(elem).find('input[value]').attr('value')?.trim();
+      if (value) {
+        text += ` ${value}`;
+      }
       // Add the text if it exists
       if (text) {
+        // Clean up specific wording issues
+        text = text.replace(/Sign into continue to Gmail/g, 'Sign in to continue to Gmail');
         contentSet.add(text);
       }
     });
@@ -91,6 +104,8 @@ module.exports = async (req, res) => {
     content = content.trim();
     // Replace multiple spaces with a single space
     content = content.replace(/\s+/g, ' ');
+    // Add spaces after punctuation marks if followed by a letter
+    content = content.replace(/([?.!])([A-Za-z])/g, '$1 $2');
     // Remove control characters
     content = content.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
     // If content is empty, provide a fallback
