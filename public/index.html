@@ -281,14 +281,13 @@
         padding: 20px;
         max-width: 600px;
         width: 90%;
-        max-height: 300px;
-        overflow: auto;
         text-align: left;
         font-family: "Geist Mono", monospace;
         font-size: 14px;
         color: #ccc;
         margin-left: auto;
         margin-right: auto;
+        /* Removed max-height and overflow to allow dynamic expansion */
       }
 
       .output-box pre {
@@ -335,7 +334,7 @@
       /* Responsive Design */
       @media (max-width: 768px) {
         body {
-          padding-top: 140px; /* Reduced from 180px to bring navbar closer to content */
+          padding-top: 140px;
         }
 
         .navbar {
@@ -343,7 +342,12 @@
           align-items: center;
           width: 90%;
           padding: 10px;
-          top: 30px; /* Reduced from 40px to bring navbar closer to content */
+          top: 30px;
+        }
+
+        .navbar.compact {
+          padding: 5px;
+          border-radius: 10px;
         }
 
         .nav-item {
@@ -351,6 +355,12 @@
           margin-bottom: 8px;
           width: 100%;
           justify-content: center;
+        }
+
+        .navbar.compact .nav-item {
+          margin-bottom: 4px;
+          height: 25px;
+          padding: 0 8px;
         }
 
         .nav-item:last-child {
@@ -362,9 +372,19 @@
           height: 12px;
         }
 
+        .navbar.compact .nav-item .icon {
+          width: 10px;
+          height: 10px;
+        }
+
         .nav-item .nav-text {
           font-size: 0.75rem;
           margin-left: 5px;
+        }
+
+        .navbar.compact .nav-item .nav-text {
+          font-size: 0.65rem;
+          margin-left: 4px;
         }
 
         .separator {
@@ -372,7 +392,7 @@
         }
 
         .main-content {
-          margin-top: 100px; /* Reduced from 120px to bring content closer to navbar */
+          margin-top: 100px;
         }
 
         .heading {
@@ -419,13 +439,18 @@
 
       @media (max-width: 480px) {
         body {
-          padding-top: 160px; /* Reduced from 200px to bring navbar closer to content */
+          padding-top: 160px;
         }
 
         .navbar {
           width: 95%;
           padding: 8px;
-          top: 40px; /* Reduced from 50px to bring navbar closer to content */
+          top: 40px;
+        }
+
+        .navbar.compact {
+          padding: 4px;
+          border-radius: 8px;
         }
 
         .nav-item {
@@ -433,9 +458,20 @@
           padding: 0 10px;
         }
 
+        .navbar.compact .nav-item {
+          height: 22px;
+          padding: 0 6px;
+          margin-bottom: 3px;
+        }
+
         .nav-item .icon {
           width: 10px;
           height: 10px;
+        }
+
+        .navbar.compact .nav-item .icon {
+          width: 8px;
+          height: 8px;
         }
 
         .nav-item .nav-text {
@@ -443,8 +479,13 @@
           margin-left: 4px;
         }
 
+        .navbar.compact .nav-item .nav-text {
+          font-size: 0.6rem;
+          margin-left: 3px;
+        }
+
         .main-content {
-          margin-top: 110px; /* Reduced from 140px to bring content closer to navbar */
+          margin-top: 110px;
         }
 
         .heading {
@@ -635,7 +676,7 @@
       </div>
     </main>
     <script>
-      // Inline JavaScript (unchanged)
+      // Inline JavaScript
       document.addEventListener("DOMContentLoaded", () => {
         const urlInput = document.getElementById("url-input");
         const scrapeBtn = document.getElementById("scrape-btn");
@@ -643,7 +684,17 @@
         const copyBtn = document.getElementById("copy-btn");
         const buttonText = scrapeBtn.querySelector(".button-text");
         const loadingIcon = scrapeBtn.querySelector(".loading-icon");
+        const navbar = document.querySelector(".navbar");
 
+        // Add compact class to navbar on scrape button click (mobile only)
+        scrapeBtn.addEventListener("click", () => {
+          const isMobile = window.innerWidth <= 768;
+          if (isMobile) {
+            navbar.classList.add("compact");
+          }
+        });
+
+        // Existing scrape functionality
         scrapeBtn.addEventListener("click", async () => {
           const url = "https://" + urlInput.value.trim();
           if (!urlInput.value) {
