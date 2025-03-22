@@ -71,25 +71,5 @@ def scrape():
         logger.error(f"Unexpected error: {str(e)}")
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
-# Vercel serverless function handler
-def handler(event, context):
-    from werkzeug.middleware.dispatcher import DispatcherMiddleware
-    from werkzeug.wrappers import Request, Response
-
-    logger.info("Handler invoked")
-    try:
-        application = DispatcherMiddleware(app)
-        request = Request(event)
-        response = Response.from_app(application, request.environ)
-
-        return {
-            "statusCode": response.status_code,
-            "headers": dict(response.headers),
-            "body": response.get_data(as_text=True)
-        }
-    except Exception as e:
-        logger.error(f"Error in handler: {str(e)}")
-        raise
-
 if __name__ == "__main__":
     app.run(debug=True)

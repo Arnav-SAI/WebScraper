@@ -2,11 +2,12 @@
     "version": 2,
     "builds": [
       {
-        "src": "api/index.py",
+        "src": "wsgi.py",
         "use": "@vercel/python",
         "config": {
           "maxLambdaSize": "15mb",
-          "runtime": "python3.11"  
+          "runtime": "python3.11",
+          "timeout": 10
         }
       },
       {
@@ -25,7 +26,7 @@
       },
       {
         "src": "/(.*)",
-        "dest": "api/index.py"
+        "dest": "wsgi.py"
       }
     ],
     "env": {
