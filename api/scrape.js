@@ -51,76 +51,25 @@ module.exports = async (req, res) => {
     const $ = cheerio.load(html);
     console.log('Loaded HTML into Cheerio');
 
-    // Remove script, style, and other non-visible elements
-    $('script, style, noscript, iframe, [hidden], [aria-hidden="true"]').remove();
-
-    // Remove specific sections like language dropdown and footer
-    $('select, footer, [role="contentinfo"], [aria-label="Language selection"]').remove();
-
     // Extract the page title
     const title = $('title').text().trim() || 'No title found';
     console.log('Extracted title:', title);
 
-    // Extract content from specific elements, avoiding duplicates
-    const contentSet = new Set(); // Use a Set to avoid duplicates
-    // Target main content areas, but only process leaf nodes
-    const selectors = 'main, [role="main"], form, p, h1, h2, h3, h4, h5, h6, label, span, div:not([role="navigation"], [role="banner"])';
-    $(selectors).each((i, elem) => {
-      // Skip if the element has children that are also in the selector (to avoid duplicates)
-      const hasTextChildren = $(elem).children(selectors).length > 0 && $(elem).children(selectors).text().trim();
-      if (hasTextChildren) {
-        return; // Skip this element, as its children will be processed
-      }
+    // Extract the meta description
+    const metaDescription = $('meta[name="description"]').attr('content')?.trim() || 'No description found';
+    console.log('Extracted meta description:', metaDescription);
 
-      // Get text from the element
-      let text = $(elem).text().trim();
-      // Get placeholder text from input fields within this element
-      $(elem).find('input[placeholder], textarea[placeholder]').each((j, input) => {
-        const placeholder = $(input).attr('placeholder')?.trim();
-        if (placeholder) {
-          text += ` ${placeholder}`;
-        }
-      });
-      // Get aria-label or value attributes as fallback for dynamic content
-      const ariaLabel = $(elem).attr('aria-label')?.trim();
-      if (ariaLabel) {
-        text += ` ${ariaLabel}`;
-      }
-      const value = $(elem).find('input[value]').attr('value')?.trim();
-      if (value) {
-        text += ` ${value}`;
-      }
-      // Add the text if it exists
-      if (text) {
-        // Clean up specific wording issues
-        text = text.replace(/Sign into continue to Gmail/g, 'Sign in to continue to Gmail');
-        contentSet.add(text);
-      }
-    });
-
-    // Convert Set to Array and join with a period and space for better readability
-    let content = Array.from(contentSet).join('. ');
-    // Clean up the content
-    content = content.trim();
-    // Replace multiple spaces with a single space
-    content = content.replace(/\s+/g, ' ');
-    // Add spaces after punctuation marks if followed by a letter
-    content = content.replace(/([?.!])([A-Za-z])/g, '$1 $2');
-    // Remove control characters
-    content = content.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
-    // If content is empty, provide a fallback
-    content = content || 'No visible content found';
-    // Add a period at the end if the content doesn't already end with one
-    if (content !== 'No visible content found' && !content.endsWith('.')) {
-      content += '.';
-    }
-    console.log('Extracted content length:', content.length);
-
-    // Construct the JSON response
+    // Construct the JSON response in the desired format
     const data = {
-      title,
+      success: true,
       url: targetUrl,
-      content,
+      data: {
+        title,
+        meta: {
+          description: metaDescription,
+        },
+        content: {}, // Empty object as per the desired output
+      },
     };
 
     console.log('Returning data:', data);
@@ -139,6 +88,12 @@ module.exports = async (req, res) => {
       errorMessage = error.message;
     }
     console.log('Returning error:', errorMessage);
-    return res.status(500).json({ error: errorMessage });
+
+    // Return the error in the desired format
+    return res.status(500).json({
+      success: false,
+      url: url || 'Unknown URL',
+      error: errorMessage,
+    });
   }
 };
