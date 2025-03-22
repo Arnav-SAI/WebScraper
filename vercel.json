@@ -2,33 +2,8 @@
     "version": 2,
     "builds": [
       {
-        "src": "wsgi.py",
-        "use": "@vercel/python",
-        "config": {
-          "maxLambdaSize": "15mb",
-          "runtime": "python3.11"
-        }
-      },
-      {
-        "src": "static/**",
-        "use": "@vercel/static"
-      },
-      {
-        "src": "templates/**",
-        "use": "@vercel/static"
+        "src": "api/scrape.py",
+        "use": "@vercel/python"
       }
-    ],
-    "routes": [
-      {
-        "src": "/static/(.*)",
-        "dest": "/static/$1"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "wsgi.py"
-      }
-    ],
-    "env": {
-      "PYTHONUNBUFFERED": "1"
-    }
+    ]
   }
