@@ -87,7 +87,8 @@
         display: flex;
         position: fixed;
         top: 20px;
-        left: 20px; /* Fixed position from the left */
+        left: 50%; /* Centered on desktop */
+        transform: translateX(-50%);
         padding: 5px;
         border: 1px solid #3f3f3f;
         border-radius: 15px;
@@ -152,25 +153,26 @@
         margin-bottom: 10px;
         font-family: "Inter", sans-serif;
         position: relative;
+        display: inline-block; /* To fit the content */
       }
 
+      /* Red accent for the entire heading */
       .heading::before {
         content: "";
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 80vw;
-        height: 80vw;
-        max-width: 800px;
-        max-height: 800px;
+        width: 120%;
+        height: 120%;
         background: radial-gradient(
           circle at center,
-          rgba(150, 0, 0, 0.1) 0%,
-          rgba(150, 0, 0, 0.05) 30%,
+          rgba(255, 0, 0, 0.3) 0%, /* Stronger red at the center */
+          rgba(255, 0, 0, 0.1) 40%,
           transparent 70%
         );
         z-index: -1;
+        pointer-events: none;
       }
 
       .description {
@@ -333,16 +335,23 @@
       /* Responsive Design */
       @media (max-width: 768px) {
         body {
-          padding-top: 60px; /* Reduced to account for smaller navbar height */
+          padding-top: 0; /* Remove padding since navbar is not fixed */
         }
 
         .navbar {
           flex-direction: row; /* Horizontal layout on mobile */
-          justify-content: space-between; /* Space out the two items */
+          justify-content: space-between; /* Space out the items */
           width: auto; /* Allow navbar to size based on content */
           padding: 5px 10px; /* Adjusted padding for horizontal layout */
+          position: absolute; /* Scrolls with the page */
           top: 20px;
-          left: 20px;
+          left: 50%; /* Center on mobile */
+          transform: translateX(-50%); /* Center on mobile */
+          transition: transform 0.3s ease-in-out; /* Smooth transition for show/hide */
+        }
+
+        .navbar.hidden {
+          transform: translateX(-50%) translateY(-100%); /* Hide by moving up, keeping centered */
         }
 
         .navbar.compact {
@@ -350,17 +359,24 @@
           border-radius: 10px;
         }
 
+        /* Remove the desktop-only restriction to show all items */
+        .desktop-only {
+          display: flex; /* Show all items on mobile */
+        }
+
         .nav-item {
-          margin-right: 10px; /* Space between items */
+          margin-right: 8px; /* Reduced space between items */
           margin-bottom: 0; /* Remove vertical spacing */
           width: auto; /* Allow items to size based on content */
           justify-content: center;
+          padding: 0 8px; /* Reduced padding for mobile */
+          height: 25px; /* Smaller height */
         }
 
         .navbar.compact .nav-item {
-          margin-right: 8px;
-          height: 25px;
-          padding: 0 8px;
+          margin-right: 6px;
+          height: 20px;
+          padding: 0 6px;
         }
 
         .nav-item:last-child {
@@ -368,7 +384,7 @@
         }
 
         .nav-item .icon {
-          width: 12px;
+          width: 12px; /* Scaled down for mobile */
           height: 12px;
         }
 
@@ -388,11 +404,12 @@
         }
 
         .separator {
-          display: none; /* Already hidden, kept for clarity */
+          height: 14px; /* Scaled down for mobile */
+          margin: 0 3px;
         }
 
         .main-content {
-          margin-top: 80px; /* Adjusted for smaller navbar height */
+          margin-top: 80px; /* Adjusted for navbar height when visible */
         }
 
         .heading {
@@ -438,14 +455,15 @@
       }
 
       @media (max-width: 480px) {
-        body {
-          padding-top: 50px; /* Further reduced for smaller screens */
-        }
-
         .navbar {
           padding: 4px 8px;
           top: 20px;
-          left: 10px;
+          left: 50%; /* Center on smaller screens */
+          transform: translateX(-50%);
+        }
+
+        .navbar.hidden {
+          transform: translateX(-50%) translateY(-100%);
         }
 
         .navbar.compact {
@@ -454,15 +472,15 @@
         }
 
         .nav-item {
-          height: 28px;
-          padding: 0 8px;
-          margin-right: 8px;
-        }
-
-        .navbar.compact .nav-item {
           height: 22px;
           padding: 0 6px;
           margin-right: 6px;
+        }
+
+        .navbar.compact .nav-item {
+          height: 18px;
+          padding: 0 4px;
+          margin-right: 4px;
         }
 
         .nav-item .icon {
@@ -483,6 +501,11 @@
         .navbar.compact .nav-item .nav-text {
           font-size: 0.6rem;
           margin-left: 3px;
+        }
+
+        .separator {
+          height: 12px;
+          margin: 0 2px;
         }
 
         .main-content {
@@ -622,7 +645,7 @@
       </a>
     </nav>
     <main class="main-content">
-      <h1 class="heading">Dive Deep into Web Data</h1>
+      <h1 class="heading">Deep Dive into Web Data</h1>
       <p class="description">
         Transform any webpage into structured JSON with precision. Extract full
         content or just what you need—clean, fast, and AI-powered.
@@ -692,6 +715,23 @@
           const isMobile = window.innerWidth <= 768;
           if (isMobile) {
             navbar.classList.add("compact");
+          }
+        });
+
+        // Scroll-based show/hide for navbar on mobile
+        let lastScrollTop = 0;
+        window.addEventListener("scroll", () => {
+          const isMobile = window.innerWidth <= 768;
+          if (isMobile) {
+            let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScrollTop > lastScrollTop) {
+              // Scrolling down
+              navbar.classList.add("hidden");
+            } else {
+              // Scrolling up
+              navbar.classList.remove("hidden");
+            }
+            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
           }
         });
 
