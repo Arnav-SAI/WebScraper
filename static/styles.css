@@ -30,8 +30,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    /* Ellipse 1 (innermost) */ radial-gradient(
+  background: radial-gradient(
       ellipse 90% 10% at 50% 80%,
       transparent 0%,
       transparent 49%,
@@ -39,42 +38,38 @@ body::before {
       rgba(255, 255, 255, 0.08) 51%,
       transparent 51%
     ),
-    /* Ellipse 2 */
-      radial-gradient(
-        ellipse 92% 12% at 50% 75%,
-        transparent 0%,
-        transparent 49%,
-        rgba(255, 255, 255, 0.08) 49%,
-        rgba(255, 255, 255, 0.08) 51%,
-        transparent 51%
-      ),
-    /* Ellipse 3 */
-      radial-gradient(
-        ellipse 94% 14% at 50% 70%,
-        transparent 0%,
-        transparent 49%,
-        rgba(255, 255, 255, 0.08) 49%,
-        rgba(255, 255, 255, 0.08) 51%,
-        transparent 51%
-      ),
-    /* Ellipse 4 */
-      radial-gradient(
-        ellipse 96% 16% at 50% 65%,
-        transparent 0%,
-        transparent 49%,
-        rgba(255, 255, 255, 0.08) 49%,
-        rgba(255, 255, 255, 0.08) 51%,
-        transparent 51%
-      ),
-    /* Ellipse 5 (outermost) */
-      radial-gradient(
-        ellipse 98% 18% at 50% 60%,
-        transparent 0%,
-        transparent 49%,
-        rgba(255, 255, 255, 0.08) 49%,
-        rgba(255, 255, 255, 0.08) 51%,
-        transparent 51%
-      );
+    radial-gradient(
+      ellipse 92% 12% at 50% 75%,
+      transparent 0%,
+      transparent 49%,
+      rgba(255, 255, 255, 0.08) 49%,
+      rgba(255, 255, 255, 0.08) 51%,
+      transparent 51%
+    ),
+    radial-gradient(
+      ellipse 94% 14% at 50% 70%,
+      transparent 0%,
+      transparent 49%,
+      rgba(255, 255, 255, 0.08) 49%,
+      rgba(255, 255, 255, 0.08) 51%,
+      transparent 51%
+    ),
+    radial-gradient(
+      ellipse 96% 16% at 50% 65%,
+      transparent 0%,
+      transparent 49%,
+      rgba(255, 255, 255, 0.08) 49%,
+      rgba(255, 255, 255, 0.08) 51%,
+      transparent 51%
+    ),
+    radial-gradient(
+      ellipse 98% 18% at 50% 60%,
+      transparent 0%,
+      transparent 49%,
+      rgba(255, 255, 255, 0.08) 49%,
+      rgba(255, 255, 255, 0.08) 51%,
+      transparent 51%
+    );
   pointer-events: none;
   opacity: 0.6;
 }
@@ -87,9 +82,7 @@ body::before {
   left: 50%;
   transform: translateX(-50%);
   width: fit-content;
-  padding-inline: 5px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 5px;
   max-height: 41px;
   border: 1px solid #3f3f3f;
   border-radius: 15px;
@@ -110,7 +103,7 @@ body::before {
 .container .item {
   display: flex;
   width: fit-content;
-  padding-inline: 13px;
+  padding: 0 13px;
   height: 30px;
   border-radius: 10px;
   align-items: center;
@@ -194,8 +187,8 @@ body::before {
   background: radial-gradient(
     circle at center,
     rgba(150, 0, 0, 0.1) 0%,
-    /* Darker, muted red with lower opacity */ rgba(150, 0, 0, 0.05) 30%,
-    /* Even fainter */ transparent 70%
+    rgba(150, 0, 0, 0.05) 30%,
+    transparent 70%
   );
   z-index: -1;
 }
@@ -210,6 +203,7 @@ body::before {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+  color: #ccc;
 }
 
 .inputContainer {
