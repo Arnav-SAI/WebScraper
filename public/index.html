@@ -785,7 +785,6 @@
             });
 
             if (!response.ok) {
-              // Capture the status and response text for better error reporting
               const errorText = await response.text();
               throw new Error(
                 `Failed to fetch: ${response.status} ${response.statusText} - ${errorText}`
@@ -808,7 +807,6 @@
 
         // Copy functionality - Copy the raw JSON text, not the highlighted HTML
         copyBtn.addEventListener("click", () => {
-          // Get the raw JSON text by parsing the innerText of the pre element
           const rawJson = jsonOutput.innerText;
           navigator.clipboard.writeText(rawJson).then(() => {
             alert("Copied to clipboard!");
@@ -821,30 +819,34 @@
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
-          // Apply syntax highlighting for JSON elements
-          return json.replace(
-            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)|([\{\}\[\]\:\,])/g,
-            function (match, valueMatch, structureMatch) {
-              if (structureMatch) {
-                // Highlight structural characters ({, }, [, ], :, ,)
-                return `<span class="json-structure">${structureMatch}</span>`;
-              }
-              // Highlight values (keys, strings, numbers, booleans, null)
+
+          // First, highlight structural characters ({, }, [, ], :, ,)
+          json = json.replace(
+            /([\{\}\[\]\:\,])/g,
+            '<span class="json-structure">$1</span>'
+          );
+
+          // Then, highlight JSON values (keys, strings, numbers, booleans, null)
+          json = json.replace(
+            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+            function (match) {
               let cls = "json-number";
-              if (/^"/.test(valueMatch)) {
-                if (/:$/.test(valueMatch)) {
+              if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
                   cls = "json-key";
                 } else {
                   cls = "json-string";
                 }
-              } else if (/true|false/.test(valueMatch)) {
+              } else if (/true|false/.test(match)) {
                 cls = "json-boolean";
-              } else if (/null/.test(valueMatch)) {
+              } else if (/null/.test(match)) {
                 cls = "json-null";
               }
-              return `<span class="${cls}">${valueMatch}</span>`;
+              return `<span class="${cls}">${match}</span>`;
             }
           );
+
+          return json;
         }
       });
     </script>
