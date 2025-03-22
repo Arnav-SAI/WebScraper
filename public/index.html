@@ -87,8 +87,7 @@
         display: flex;
         position: fixed;
         top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 20px; /* Fixed position from the left */
         padding: 5px;
         border: 1px solid #3f3f3f;
         border-radius: 15px;
@@ -287,7 +286,6 @@
         color: #ccc;
         margin-left: auto;
         margin-right: auto;
-        /* Removed max-height and overflow to allow dynamic expansion */
       }
 
       .output-box pre {
@@ -311,60 +309,62 @@
         color: #fff;
       }
 
+      /* Syntax highlighting colors */
       .json-key {
-        color: #ff79c6;
+        color: #ff79c6; /* Bright pink for keys */
       }
 
       .json-string {
-        color: #f1fa8c;
+        color: #f1fa8c; /* Yellow for strings */
       }
 
       .json-number {
-        color: #bd93f9;
+        color: #bd93f9; /* Purple for numbers */
       }
 
       .json-null {
-        color: #ff5555;
+        color: #ff5555; /* Red for null */
       }
 
       .json-boolean {
-        color: #50fa7b;
+        color: #50fa7b; /* Green for booleans */
       }
 
       /* Responsive Design */
       @media (max-width: 768px) {
         body {
-          padding-top: 140px;
+          padding-top: 60px; /* Reduced to account for smaller navbar height */
         }
 
         .navbar {
-          flex-direction: column;
-          align-items: center;
-          width: 90%;
-          padding: 10px;
-          top: 30px;
+          flex-direction: row; /* Horizontal layout on mobile */
+          justify-content: space-between; /* Space out the two items */
+          width: auto; /* Allow navbar to size based on content */
+          padding: 5px 10px; /* Adjusted padding for horizontal layout */
+          top: 20px;
+          left: 20px;
         }
 
         .navbar.compact {
-          padding: 5px;
+          padding: 3px 8px; /* Smaller padding in compact mode */
           border-radius: 10px;
         }
 
         .nav-item {
-          margin-right: 0;
-          margin-bottom: 8px;
-          width: 100%;
+          margin-right: 10px; /* Space between items */
+          margin-bottom: 0; /* Remove vertical spacing */
+          width: auto; /* Allow items to size based on content */
           justify-content: center;
         }
 
         .navbar.compact .nav-item {
-          margin-bottom: 4px;
+          margin-right: 8px;
           height: 25px;
           padding: 0 8px;
         }
 
         .nav-item:last-child {
-          margin-bottom: 0;
+          margin-right: 0; /* Remove margin on the last item */
         }
 
         .nav-item .icon {
@@ -388,11 +388,11 @@
         }
 
         .separator {
-          display: none;
+          display: none; /* Already hidden, kept for clarity */
         }
 
         .main-content {
-          margin-top: 100px;
+          margin-top: 80px; /* Adjusted for smaller navbar height */
         }
 
         .heading {
@@ -439,29 +439,30 @@
 
       @media (max-width: 480px) {
         body {
-          padding-top: 160px;
+          padding-top: 50px; /* Further reduced for smaller screens */
         }
 
         .navbar {
-          width: 95%;
-          padding: 8px;
-          top: 40px;
+          padding: 4px 8px;
+          top: 20px;
+          left: 10px;
         }
 
         .navbar.compact {
-          padding: 4px;
+          padding: 2px 6px;
           border-radius: 8px;
         }
 
         .nav-item {
           height: 28px;
-          padding: 0 10px;
+          padding: 0 8px;
+          margin-right: 8px;
         }
 
         .navbar.compact .nav-item {
           height: 22px;
           padding: 0 6px;
-          margin-bottom: 3px;
+          margin-right: 6px;
         }
 
         .nav-item .icon {
@@ -485,7 +486,7 @@
         }
 
         .main-content {
-          margin-top: 110px;
+          margin-top: 70px;
         }
 
         .heading {
@@ -538,7 +539,7 @@
       <div class="separator"></div>
       <a
         href="https://github.com/Arnav-SAI/WebScraper/blob/main/README.md"
-        class="nav-item"
+        class="nav-item desktop-only"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -565,7 +566,7 @@
       </a>
       <a
         href="https://github.com/Arnav-SAI/WebScraper/blob/main/README.md"
-        class="nav-item"
+        class="nav-item desktop-only"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -694,7 +695,7 @@
           }
         });
 
-        // Existing scrape functionality
+        // Scrape functionality
         scrapeBtn.addEventListener("click", async () => {
           const url = "https://" + urlInput.value.trim();
           if (!urlInput.value) {
@@ -729,6 +730,7 @@
             jsonOutput.innerHTML = syntaxHighlight(formattedJson);
           } catch (error) {
             jsonOutput.textContent = JSON.stringify({ error: error.message }, null, 2);
+            jsonOutput.innerHTML = syntaxHighlight(jsonOutput.textContent);
           } finally {
             scrapeBtn.disabled = false;
             scrapeBtn.classList.remove("loading");
