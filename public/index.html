@@ -28,7 +28,7 @@
         min-height: 100vh;
         margin: 0;
         overflow-x: hidden;
-        padding-top: 80px;
+        padding-top: 0; /* Removed since navbar is absolute on all sizes */
       }
 
       body::before {
@@ -85,9 +85,9 @@
 
       .navbar {
         display: flex;
-        position: fixed;
+        position: absolute; /* Absolute for all screen sizes to enable scroll-out */
         top: 20px;
-        left: 50%; /* Centered on desktop */
+        left: 50%; /* Centered on all sizes */
         transform: translateX(-50%);
         padding: 5px;
         border: 1px solid #3f3f3f;
@@ -95,6 +95,16 @@
         background-color: rgba(15, 15, 15, 0.73);
         align-items: center;
         z-index: 1000;
+        transition: transform 0.3s ease-in-out; /* Smooth transition for show/hide */
+      }
+
+      .navbar.hidden {
+        transform: translateX(-50%) translateY(-100%); /* Hide by moving up, keeping centered */
+      }
+
+      .navbar.compact {
+        padding: 3px 8px;
+        border-radius: 10px;
       }
 
       .nav-item {
@@ -132,6 +142,22 @@
         margin-left: 7px;
       }
 
+      .navbar.compact .nav-item {
+        margin-right: 8px;
+        height: 25px;
+        padding: 0 8px;
+      }
+
+      .navbar.compact .nav-item .icon {
+        width: 12px;
+        height: 12px;
+      }
+
+      .navbar.compact .nav-item .nav-text {
+        font-size: 0.75rem;
+        margin-left: 5px;
+      }
+
       .separator {
         width: 0.6px;
         height: 17px;
@@ -144,41 +170,44 @@
         padding: 20px;
         width: 100%;
         max-width: 1200px;
-        margin-top: 60px;
+        margin-top: 60px; /* Reduced to bring content higher up */
       }
 
       .heading {
         font-size: 60px;
         font-weight: 700;
-        margin-bottom: 10px;
+        margin-bottom: 10px; /* Spacing maintained */
         font-family: "Inter", sans-serif;
         position: relative;
         display: inline-block; /* To fit the content */
+        z-index: 1; /* Ensure text is above the background accent */
       }
 
-      /* Red accent for the entire heading */
+      /* Red accent starting behind the text and spreading out */
       .heading::before {
         content: "";
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 120%;
-        height: 120%;
+        width: 80vw; /* Large width to spread across the background */
+        height: 80vw; /* Large height to spread across the background */
+        max-width: 800px; /* Cap the size on larger screens */
+        max-height: 800px;
         background: radial-gradient(
           circle at center,
-          rgba(255, 0, 0, 0.3) 0%, /* Stronger red at the center */
-          rgba(255, 0, 0, 0.1) 40%,
-          transparent 70%
+          rgba(255, 0, 0, 0.3) 0%, /* Strong red at the center */
+          rgba(255, 0, 0, 0.1) 30%,
+          transparent 60% /* Fade out to spread further */
         );
-        z-index: -1;
+        z-index: -1; /* Behind the heading */
         pointer-events: none;
       }
 
       .description {
         font-size: 18px;
         font-weight: 400;
-        margin-bottom: 30px;
+        margin-bottom: 30px; /* Spacing maintained */
         font-family: "Inter", sans-serif;
         max-width: 600px;
         line-height: 1.5;
@@ -191,7 +220,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 20px;
+        margin-bottom: 20px; /* Spacing maintained */
         font-family: "Geist Mono", monospace;
         font-size: 14px;
         color: #888;
@@ -298,8 +327,8 @@
 
       .copy-button {
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 15px; /* Adjusted for better spacing */
+        right: 15px;
         background: none;
         border: none;
         color: #ccc;
@@ -332,22 +361,27 @@
         color: #50fa7b; /* Green for booleans */
       }
 
+      .json-structure {
+        color: #ff8c00; /* Orange for structural characters like {} */
+      }
+
       /* Responsive Design */
       @media (max-width: 768px) {
-        body {
-          padding-top: 0; /* Remove padding since navbar is not fixed */
+        .desktop-only {
+          display: none; /* Hide Examples on mobile */
         }
 
         .navbar {
           flex-direction: row; /* Horizontal layout on mobile */
           justify-content: space-between; /* Space out the items */
           width: auto; /* Allow navbar to size based on content */
-          padding: 5px 10px; /* Adjusted padding for horizontal layout */
-          position: absolute; /* Scrolls with the page */
+          padding: 6px 12px; /* Reduced for better fit */
+          position: absolute; /* Already absolute from base styles */
           top: 20px;
           left: 50%; /* Center on mobile */
           transform: translateX(-50%); /* Center on mobile */
           transition: transform 0.3s ease-in-out; /* Smooth transition for show/hide */
+          border-radius: 16px; /* Adjusted border radius */
         }
 
         .navbar.hidden {
@@ -355,13 +389,8 @@
         }
 
         .navbar.compact {
-          padding: 3px 8px; /* Smaller padding in compact mode */
-          border-radius: 10px;
-        }
-
-        /* Remove the desktop-only restriction to show all items */
-        .desktop-only {
-          display: flex; /* Show all items on mobile */
+          padding: 4px 10px; /* Reduced for better fit */
+          border-radius: 12px;
         }
 
         .nav-item {
@@ -370,12 +399,12 @@
           width: auto; /* Allow items to size based on content */
           justify-content: center;
           padding: 0 8px; /* Reduced padding for mobile */
-          height: 25px; /* Smaller height */
+          height: 30px; /* Reduced height for better fit */
         }
 
         .navbar.compact .nav-item {
           margin-right: 6px;
-          height: 20px;
+          height: 25px; /* Reduced height in compact mode */
           padding: 0 6px;
         }
 
@@ -384,32 +413,32 @@
         }
 
         .nav-item .icon {
-          width: 12px; /* Scaled down for mobile */
-          height: 12px;
+          width: 14px; /* Reduced icon size for mobile */
+          height: 14px;
         }
 
         .navbar.compact .nav-item .icon {
-          width: 10px;
-          height: 10px;
+          width: 12px;
+          height: 12px;
         }
 
         .nav-item .nav-text {
-          font-size: 0.75rem;
+          font-size: 0.85rem; /* Reduced text size */
           margin-left: 5px;
         }
 
         .navbar.compact .nav-item .nav-text {
-          font-size: 0.65rem;
+          font-size: 0.75rem;
           margin-left: 4px;
         }
 
         .separator {
-          height: 14px; /* Scaled down for mobile */
+          height: 18px; /* Reduced separator for mobile */
           margin: 0 3px;
         }
 
         .main-content {
-          margin-top: 80px; /* Adjusted for navbar height when visible */
+          margin-top: 70px; /* Reduced to bring content higher up */
         }
 
         .heading {
@@ -449,17 +478,18 @@
         }
 
         .copy-button {
-          top: 5px;
-          right: 5px;
+          top: 10px; /* Adjusted for mobile */
+          right: 10px;
         }
       }
 
       @media (max-width: 480px) {
         .navbar {
-          padding: 4px 8px;
+          padding: 5px 10px; /* Further reduced for very small screens */
           top: 20px;
           left: 50%; /* Center on smaller screens */
           transform: translateX(-50%);
+          border-radius: 14px;
         }
 
         .navbar.hidden {
@@ -467,49 +497,49 @@
         }
 
         .navbar.compact {
-          padding: 2px 6px;
-          border-radius: 8px;
+          padding: 3px 8px;
+          border-radius: 10px;
         }
 
         .nav-item {
-          height: 22px;
+          height: 28px; /* Further reduced height */
           padding: 0 6px;
           margin-right: 6px;
         }
 
         .navbar.compact .nav-item {
-          height: 18px;
-          padding: 0 4px;
-          margin-right: 4px;
+          height: 24px;
+          padding: 0 5px;
+          margin-right: 5px;
         }
 
         .nav-item .icon {
+          width: 12px; /* Further reduced icon size */
+          height: 12px;
+        }
+
+        .navbar.compact .nav-item .icon {
           width: 10px;
           height: 10px;
         }
 
-        .navbar.compact .nav-item .icon {
-          width: 8px;
-          height: 8px;
-        }
-
         .nav-item .nav-text {
-          font-size: 0.65rem;
+          font-size: 0.8rem;
           margin-left: 4px;
         }
 
         .navbar.compact .nav-item .nav-text {
-          font-size: 0.6rem;
+          font-size: 0.7rem;
           margin-left: 3px;
         }
 
         .separator {
-          height: 12px;
+          height: 16px;
           margin: 0 2px;
         }
 
         .main-content {
-          margin-top: 70px;
+          margin-top: 60px; /* Reduced to bring content higher up */
         }
 
         .heading {
@@ -562,7 +592,7 @@
       <div class="separator"></div>
       <a
         href="https://github.com/Arnav-SAI/WebScraper/blob/main/README.md"
-        class="nav-item desktop-only"
+        class="nav-item"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -710,29 +740,23 @@
         const loadingIcon = scrapeBtn.querySelector(".loading-icon");
         const navbar = document.querySelector(".navbar");
 
-        // Add compact class to navbar on scrape button click (mobile only)
+        // Add compact class to navbar on scrape button click
         scrapeBtn.addEventListener("click", () => {
-          const isMobile = window.innerWidth <= 768;
-          if (isMobile) {
-            navbar.classList.add("compact");
-          }
+          navbar.classList.add("compact");
         });
 
-        // Scroll-based show/hide for navbar on mobile
+        // Scroll-based show/hide for navbar on all screen sizes
         let lastScrollTop = 0;
         window.addEventListener("scroll", () => {
-          const isMobile = window.innerWidth <= 768;
-          if (isMobile) {
-            let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (currentScrollTop > lastScrollTop) {
-              // Scrolling down
-              navbar.classList.add("hidden");
-            } else {
-              // Scrolling up
-              navbar.classList.remove("hidden");
-            }
-            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          if (currentScrollTop > lastScrollTop) {
+            // Scrolling down
+            navbar.classList.add("hidden");
+          } else {
+            // Scrolling up
+            navbar.classList.remove("hidden");
           }
+          lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
         });
 
         // Scrape functionality
@@ -787,6 +811,9 @@
         });
 
         function syntaxHighlight(json) {
+          // First, wrap structural characters ({, }, [, ], :, ,) in a span with class "json-structure"
+          json = json.replace(/([\{\}\[\]\:\,])/g, '<span class="json-structure">$1</span>');
+          // Then, apply syntax highlighting for other JSON elements
           json = json
             .replace(/&/g, "&")
             .replace(/</g, "<")
