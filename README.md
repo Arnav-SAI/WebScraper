@@ -14,20 +14,20 @@ WebScraper is a lightweight and efficient web scraping tool designed to extract 
 <br>
 
 # 🌟Features
-🔗 Broad Compatibility - Scrape data from a wide range of websites
-📋 Structured JSON Output - Get clean, well-organized JSON data
-📝 Key Data Extraction - Extracts page titles and meta descriptions
-🖥️ Intuitive Interface - Modern UI with syntax-highlighted JSON display
-⚙️ API Access - Simple API for programmatic scraping
-📱 Responsive Design - Works seamlessly on desktop and mobile devices
+- 🔗 Broad Compatibility - Scrape data from a wide range of websites
+- 📋 Structured JSON Output - Get clean, well-organized JSON data
+- 📝 Key Data Extraction - Extracts page titles and meta descriptions
+- 🖥️ Intuitive Interface - Modern UI with syntax-highlighted JSON display
+- ⚙️ API Access - Simple API for programmatic scraping
+- 📱 Responsive Design - Works seamlessly on desktop and mobile devices
 <br>
 
 # 🛠️ Technologies Used
-⚡ Next.js + JavaScript
-📄 Cheerio for HTML parsing
-🌍 Axios for making HTTP requests
-🎨 Custom CSS for a dark, modern UI
-☁️ Vercel for hosting and deployment
+- ⚡ Next.js + JavaScript
+- 📄 Cheerio for HTML parsing
+- 🌍 Axios for making HTTP requests
+- 🎨 Custom CSS for a dark, modern UI
+- ☁️ Vercel for hosting and deployment
 
 <br>
 ## 📦 Installation
