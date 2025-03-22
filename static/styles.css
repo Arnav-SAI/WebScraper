@@ -262,11 +262,36 @@ body::before {
   font-size: 14px;
   font-weight: 500;
   transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .diveButton:hover {
   background-color: #333;
   color: #fff;
+}
+
+.diveButton .loading-icon {
+  display: none;
+}
+
+.diveButton.loading .button-text {
+  display: none;
+}
+
+.diveButton.loading .loading-icon {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .code-container {
