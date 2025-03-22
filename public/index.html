@@ -8,14 +8,566 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Geist+Mono:wght@400&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles.css" />
-    <!-- Fallback inline style to confirm index.html is loading -->
     <style>
+      /* Inline CSS */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
-        background-color: #000;
+        background: radial-gradient(circle at center, #1a1a1a, #000000);
+        position: relative;
         color: #fff;
-        font-family: sans-serif;
+        font-family: "Inter", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+        padding-top: 0; /* Removed since navbar is absolute on all sizes */
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+          radial-gradient(
+            ellipse 90% 10% at 50% 80%,
+            transparent 0%,
+            transparent 49%,
+            rgba(255, 255, 255, 0.08) 49%,
+            rgba(255, 255, 255, 0.08) 51%,
+            transparent 51%
+          ),
+          radial-gradient(
+            ellipse 92% 12% at 50% 75%,
+            transparent 0%,
+            transparent 49%,
+            rgba(255, 255, 255, 0.08) 49%,
+            rgba(255, 255, 255, 0.08) 51%,
+            transparent 51%
+          ),
+          radial-gradient(
+            ellipse 94% 14% at 50% 70%,
+            transparent 0%,
+            transparent 49%,
+            rgba(255, 255, 255, 0.08) 49%,
+            rgba(255, 255, 255, 0.08) 51%,
+            transparent 51%
+          ),
+          radial-gradient(
+            ellipse 96% 16% at 50% 65%,
+            transparent 0%,
+            transparent 49%,
+            rgba(255, 255, 255, 0.08) 49%,
+            rgba(255, 255, 255, 0.08) 51%,
+            transparent 51%
+          ),
+          radial-gradient(
+            ellipse 98% 18% at 50% 60%,
+            transparent 0%,
+            transparent 49%,
+            rgba(255, 255, 255, 0.08) 49%,
+            rgba(255, 255, 255, 0.08) 51%,
+            transparent 51%
+          );
+        pointer-events: none;
+        opacity: 0.6;
+      }
+
+      .navbar {
+        display: flex;
+        position: absolute; /* Absolute for all screen sizes to enable scroll-out */
+        top: 20px;
+        left: 50%; /* Centered on all sizes */
+        transform: translateX(-50%);
+        padding: 5px;
+        border: 1px solid #3f3f3f;
+        border-radius: 15px;
+        background-color: rgba(15, 15, 15, 0.73);
+        align-items: center;
+        z-index: 1000;
+        transition: transform 0.3s ease-in-out; /* Smooth transition for show/hide */
+      }
+
+      .navbar.hidden {
+        transform: translateX(-50%) translateY(-100%); /* Hide by moving up, keeping centered */
+      }
+
+      .navbar.compact {
+        padding: 3px 8px;
+        border-radius: 10px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 0 13px;
+        height: 30px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        color: #ccc !important;
+        text-decoration: none;
+        margin-right: 6px;
+      }
+
+      .nav-item:hover {
+        background-color: #323232cc;
+        border: 1px solid #3f3f3f;
+      }
+
+      .nav-item.active {
+        background-color: #323232cc;
+        border: 1px solid #3f3f3f;
+      }
+
+      .nav-item .icon {
+        stroke: #ccc;
+        width: 16px;
+        height: 16px;
+      }
+
+      .nav-item .nav-text {
+        font-size: 12px;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        margin-left: 7px;
+      }
+
+      .navbar.compact .nav-item {
+        margin-right: 8px;
+        height: 25px;
+        padding: 0 8px;
+      }
+
+      .navbar.compact .nav-item .icon {
+        width: 12px;
+        height: 12px;
+      }
+
+      .navbar.compact .nav-item .nav-text {
+        font-size: 0.75rem;
+        margin-left: 5px;
+      }
+
+      .separator {
+        width: 0.6px;
+        height: 17px;
+        background-color: #3f3f3f;
+        margin: 0 4px;
+      }
+
+      .main-content {
         text-align: center;
+        padding: 20px;
+        width: 100%;
+        max-width: 1200px;
+        margin-top: 60px; /* Adjusted to bring content higher up */
+      }
+
+      .heading {
+        font-size: 60px;
+        font-weight: 700;
+        margin-bottom: 10px; /* Spacing maintained */
+        font-family: "Inter", sans-serif;
+        position: relative;
+        display: inline-block; /* To fit the content */
+        z-index: 1; /* Ensure text is above the background accent */
+      }
+
+      /* Red accent starting behind the text and spreading out */
+      .heading::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw; /* Large width to spread across the background */
+        height: 80vw; /* Large height to spread across the background */
+        max-width: 800px; /* Cap the size on larger screens */
+        max-height: 800px;
+        background: radial-gradient(
+          circle at center,
+          rgba(255, 0, 0, 0.3) 0%, /* Strong red at the center */
+          rgba(255, 0, 0, 0.1) 30%,
+          transparent 60% /* Fade out to spread further */
+        );
+        z-index: -1; /* Behind the heading */
+        pointer-events: none;
+      }
+
+      .description {
+        font-size: 18px;
+        font-weight: 400;
+        margin-bottom: 30px; /* Spacing maintained */
+        font-family: "Inter", sans-serif;
+        max-width: 600px;
+        line-height: 1.5;
+        color: #ccc;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .input-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px; /* Spacing maintained */
+        font-family: "Geist Mono", monospace;
+        font-size: 14px;
+        color: #888;
+        background-color: #121212;
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        padding: 8px 12px;
+        max-width: 600px;
+        width: 90%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        transition: border-color 0.2s;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .input-box:hover {
+        border-color: #444;
+      }
+
+      .prefix {
+        color: #888;
+      }
+
+      .url-input {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        background: transparent;
+        color: #ddd;
+        font-family: "Geist Mono", monospace;
+        font-size: 14px;
+        outline: none;
+        margin-left: 8px;
+      }
+
+      .url-input::placeholder {
+        color: #666;
+      }
+
+      .scrape-button {
+        padding: 8px 16px;
+        border: 1px solid #2a2a2a;
+        border-radius: 8px;
+        background: #222;
+        color: #ddd;
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background-color 0.2s, color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .scrape-button:hover {
+        background-color: #333;
+        color: #fff;
+      }
+
+      .scrape-button .loading-icon {
+        display: none;
+      }
+
+      .scrape-button.loading .button-text {
+        display: none;
+      }
+
+      .scrape-button.loading .loading-icon {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .output-box {
+        position: relative;
+        background: #1a1a1a;
+        border: 1px solid #3f3f3f;
+        border-radius: 15px;
+        padding: 20px;
+        max-width: 600px;
+        width: 90%;
+        text-align: left;
+        font-family: "Geist Mono", monospace;
+        font-size: 14px;
+        color: #ccc;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .output-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-x: auto; /* Ensure long lines can scroll horizontally */
+      }
+
+      .copy-button {
+        position: absolute;
+        top: 15px; /* Adjusted for better spacing */
+        right: 15px;
+        background: none;
+        border: none;
+        color: #ccc;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+
+      .copy-button:hover {
+        color: #fff;
+      }
+
+      /* Syntax highlighting colors */
+      .json-key {
+        color: #ff79c6; /* Bright pink for keys */
+      }
+
+      .json-string {
+        color: #f1fa8c; /* Yellow for strings */
+      }
+
+      .json-number {
+        color: #bd93f9; /* Purple for numbers */
+      }
+
+      .json-null {
+        color: #ff5555; /* Red for null */
+      }
+
+      .json-boolean {
+        color: #50fa7b; /* Green for booleans */
+      }
+
+      .json-structure {
+        color: #ff8c00; /* Orange for structural characters like {} */
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .desktop-only {
+          display: none; /* Hide Examples on mobile */
+        }
+
+        .navbar {
+          flex-direction: row; /* Horizontal layout on mobile */
+          justify-content: space-between; /* Space out the items */
+          width: auto; /* Allow navbar to size based on content */
+          padding: 6px 12px; /* Adjusted for better fit */
+          position: absolute; /* Already absolute from base styles */
+          top: 20px;
+          left: 50%; /* Center on mobile */
+          transform: translateX(-50%); /* Center on mobile */
+          transition: transform 0.3s ease-in-out; /* Smooth transition for show/hide */
+          border-radius: 16px; /* Adjusted border radius */
+        }
+
+        .navbar.hidden {
+          transform: translateX(-50%) translateY(-100%); /* Hide by moving up, keeping centered */
+        }
+
+        .navbar.compact {
+          padding: 4px 10px; /* Adjusted for better fit */
+          border-radius: 12px;
+        }
+
+        .nav-item {
+          margin-right: 8px; /* Adjusted space between items */
+          margin-bottom: 0; /* Remove vertical spacing */
+          width: auto; /* Allow items to size based on content */
+          justify-content: center;
+          padding: 0 8px; /* Adjusted padding for mobile */
+          height: 30px; /* Adjusted height for better fit */
+        }
+
+        .navbar.compact .nav-item {
+          margin-right: 6px;
+          height: 25px; /* Adjusted height in compact mode */
+          padding: 0 6px;
+        }
+
+        .nav-item:last-child {
+          margin-right: 0; /* Remove margin on the last item */
+        }
+
+        .nav-item .icon {
+          width: 14px; /* Adjusted icon size for mobile */
+          height: 14px;
+        }
+
+        .navbar.compact .nav-item .icon {
+          width: 12px;
+          height: 12px;
+        }
+
+        .nav-item .nav-text {
+          font-size: 0.85rem; /* Adjusted text size */
+          margin-left: 5px;
+        }
+
+        .navbar.compact .nav-item .nav-text {
+          font-size: 0.75rem;
+          margin-left: 4px;
+        }
+
+        .separator {
+          height: 18px; /* Adjusted separator for mobile */
+          margin: 0 3px;
+        }
+
+        .main-content {
+          margin-top: 70px; /* Adjusted to bring content higher up */
+        }
+
+        .heading {
+          font-size: 2.5rem;
+        }
+
+        .description {
+          font-size: 1rem;
+          max-width: 90%;
+        }
+
+        .input-box {
+          flex-direction: column;
+          align-items: stretch;
+          padding: 10px;
+        }
+
+        .prefix {
+          margin-bottom: 8px;
+        }
+
+        .url-input {
+          margin-left: 0;
+          margin-bottom: 10px;
+          font-size: 0.9rem;
+        }
+
+        .scrape-button {
+          width: 100%;
+          justify-content: center;
+          font-size: 0.9rem;
+        }
+
+        .output-box {
+          padding: 15px;
+          font-size: 0.85rem;
+        }
+
+        .copy-button {
+          top: 10px; /* Adjusted for mobile */
+          right: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .navbar {
+          padding: 5px 10px; /* Further adjusted for very small screens */
+          top: 20px;
+          left: 50%; /* Center on smaller screens */
+          transform: translateX(-50%);
+          border-radius: 14px;
+        }
+
+        .navbar.hidden {
+          transform: translateX(-50%) translateY(-100%);
+        }
+
+        .navbar.compact {
+          padding: 3px 8px;
+          border-radius: 10px;
+        }
+
+        .nav-item {
+          height: 28px; /* Further adjusted height */
+          padding: 0 6px;
+          margin-right: 6px;
+        }
+
+        .navbar.compact .nav-item {
+          height: 24px;
+          padding: 0 5px;
+          margin-right: 5px;
+        }
+
+        .nav-item .icon {
+          width: 12px; /* Further adjusted icon size */
+          height: 12px;
+        }
+
+        .navbar.compact .nav-item .icon {
+          width: 10px;
+          height: 10px;
+        }
+
+        .nav-item .nav-text {
+          font-size: 0.8rem;
+          margin-left: 4px;
+        }
+
+        .navbar.compact .nav-item .nav-text {
+          font-size: 0.7rem;
+          margin-left: 3px;
+        }
+
+        .separator {
+          height: 16px;
+          margin: 0 2px;
+        }
+
+        .main-content {
+          margin-top: 60px; /* Adjusted to bring content higher up */
+        }
+
+        .heading {
+          font-size: 1.8rem;
+        }
+
+        .description {
+          font-size: 0.9rem;
+        }
+
+        .input-box {
+          padding: 8px;
+        }
+
+        .url-input {
+          font-size: 0.85rem;
+        }
+
+        .scrape-button {
+          padding: 6px 12px;
+          font-size: 0.85rem;
+        }
+
+        .output-box {
+          padding: 10px;
+          font-size: 0.8rem;
+        }
       }
     </style>
   </head>
@@ -39,7 +591,12 @@
         </svg>
       </a>
       <div class="separator"></div>
-      <a href="#" class="nav-item">
+      <a
+        href="https://github.com/Arnav-SAI/WebScraper/blob/main/README.md"
+        class="nav-item"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <svg
           class="icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +618,12 @@
         </svg>
         <span class="nav-text">How</span>
       </a>
-      <a href="#" class="nav-item">
+      <a
+        href="https://github.com/Arnav-SAI/WebScraper/blob/main/README.md"
+        class="nav-item desktop-only"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <svg
           class="icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +650,12 @@
         </svg>
         <span class="nav-text">Examples</span>
       </a>
-      <a href="#" class="nav-item">
+      <a
+        href="https://github.com/Arnav-SAI/WebScraper/blob/main/README.md"
+        class="nav-item"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <svg
           class="icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +676,7 @@
       </a>
     </nav>
     <main class="main-content">
-      <h1 class="heading">Dive Deep into Web Data</h1>
+      <h1 class="heading">Deep Dive into Web Data</h1>
       <p class="description">
         Transform any webpage into structured JSON with precision. Extract full
         content or just what you need—clean, fast, and AI-powered.
@@ -136,7 +703,7 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-          >
+        >
             <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
           </svg>
         </button>
@@ -153,7 +720,7 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-          >
+        >
             <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
             <path
               d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
@@ -163,6 +730,113 @@
         <pre id="json-output">{}</pre>
       </div>
     </main>
-    <script src="/script.js"></script>
+    <script>
+      // Inline JavaScript
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlInput = document.getElementById("url-input");
+        const scrapeBtn = document.getElementById("scrape-btn");
+        const jsonOutput = document.getElementById("json-output");
+        const copyBtn = document.getElementById("copy-btn");
+        const buttonText = scrapeBtn.querySelector(".button-text");
+        const loadingIcon = scrapeBtn.querySelector(".loading-icon");
+        const navbar = document.querySelector(".navbar");
+
+        // Add compact class to navbar on scrape button click
+        scrapeBtn.addEventListener("click", () => {
+          navbar.classList.add("compact");
+        });
+
+        // Scroll-based show/hide for navbar on all screen sizes
+        let lastScrollTop = 0;
+        window.addEventListener("scroll", () => {
+          let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          if (currentScrollTop > lastScrollTop) {
+            // Scrolling down
+            navbar.classList.add("hidden");
+          } else {
+            // Scrolling up
+            navbar.classList.remove("hidden");
+          }
+          lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+        });
+
+        // Scrape functionality
+        scrapeBtn.addEventListener("click", async () => {
+          const url = "https://" + urlInput.value.trim();
+          if (!urlInput.value) {
+            alert("Please enter a URL");
+            return;
+          }
+
+          scrapeBtn.disabled = true;
+          scrapeBtn.classList.add("loading");
+          buttonText.textContent = "Scraping...";
+          loadingIcon.style.display = "inline-block";
+
+          jsonOutput.textContent = "{}"; // Reset output
+
+          try {
+            const response = await fetch("/api/scrape", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ url }),
+            });
+
+            if (!response.ok) {
+              throw new Error("Failed to fetch");
+            }
+
+            const data = await response.json();
+            const formattedJson = JSON.stringify(data, null, 2);
+            jsonOutput.innerHTML = syntaxHighlight(formattedJson); // Use innerHTML to render the highlighted JSON
+          } catch (error) {
+            const errorJson = JSON.stringify({ error: error.message }, null, 2);
+            jsonOutput.innerHTML = syntaxHighlight(errorJson);
+          } finally {
+            scrapeBtn.disabled = false;
+            scrapeBtn.classList.remove("loading");
+            buttonText.textContent = "Scrape";
+            loadingIcon.style.display = "none";
+          }
+        });
+
+        copyBtn.addEventListener("click", () => {
+          const text = jsonOutput.textContent;
+          navigator.clipboard.writeText(text).then(() => {
+            alert("Copied to clipboard!");
+          });
+        });
+
+        function syntaxHighlight(json) {
+          // First, wrap structural characters ({, }, [, ], :, ,) in a span with class "json-structure"
+          json = json.replace(/([\{\}\[\]\:\,])/g, '<span class="json-structure">$1</span>');
+          // Then, apply syntax highlighting for other JSON elements
+          json = json
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+          return json.replace(
+            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+            function (match) {
+              let cls = "json-number";
+              if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                  cls = "json-key";
+                } else {
+                  cls = "json-string";
+                }
+              } else if (/true|false/.test(match)) {
+                cls = "json-boolean";
+              } else if (/null/.test(match)) {
+                cls = "json-null";
+              }
+              return '<span class="' + cls + '">' + match + "</span>";
+            }
+          );
+        }
+      });
+    </script>
   </body>
 </html>
