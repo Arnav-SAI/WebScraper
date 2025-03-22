@@ -53,6 +53,7 @@ npm install
 3. View the structured **`JSON`** output
 
 ## Using the API
+```
 // Send a POST request to the scrape endpoint
 const response = await fetch("/api/scrape", {
   method: "POST",
@@ -62,10 +63,11 @@ const response = await fetch("/api/scrape", {
 
 const data = await response.json();
 console.log(data);
-
+```
 <br>
 
 # 📋 Sample Output
+```
 {
   "success": true,
   "url": "https://gmail.com",
@@ -77,5 +79,6 @@ console.log(data);
     "content": {}
   }
 }
+```
 <br>
 
