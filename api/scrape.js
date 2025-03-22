@@ -2,12 +2,17 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 export default async function handler(req, res) {
+  // Log the start of the function for debugging
+  console.log('Received request to /api/scrape:', req.body);
+
   if (req.method !== 'POST') {
+    console.log('Method not allowed:', req.method);
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { url } = req.body;
   if (!url) {
+    console.log('URL is required, received:', url);
     return res.status(400).json({ error: 'URL is required' });
   }
 
@@ -17,6 +22,7 @@ export default async function handler(req, res) {
     if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
       targetUrl = `https://${targetUrl}`;
     }
+    console.log('Fetching URL:', targetUrl);
 
     // Fetch the webpage with proper headers
     const response = await axios.get(targetUrl, {
@@ -30,19 +36,24 @@ export default async function handler(req, res) {
       maxRedirects: 5, // Follow up to 5 redirects
     });
 
+    console.log('Received response from URL, status:', response.status);
+
     const html = response.data;
 
     // Load HTML into Cheerio
     const $ = cheerio.load(html);
+    console.log('Loaded HTML into Cheerio');
 
     // Remove script and style tags to avoid capturing JavaScript/CSS
     $('script, style').remove();
 
     // Extract the main content (body text)
     const content = $('body').text().replace(/\s+/g, ' ').trim();
+    console.log('Extracted content length:', content.length);
 
     // Extract the page title
     const title = $('title').text().trim();
+    console.log('Extracted title:', title);
 
     // Construct the JSON response
     const data = {
@@ -51,8 +62,12 @@ export default async function handler(req, res) {
       content: content,
     };
 
+    console.log('Returning data:', data);
     return res.status(200).json(data);
   } catch (error) {
+    // Log the error for debugging
+    console.error('Error in /api/scrape:', error);
+
     // Provide detailed error information
     let errorMessage = 'Failed to scrape the website';
     if (error.response) {
@@ -62,6 +77,7 @@ export default async function handler(req, res) {
     } else {
       errorMessage = error.message;
     }
+    console.log('Returning error:', errorMessage);
     return res.status(500).json({ error: errorMessage });
   }
 }
