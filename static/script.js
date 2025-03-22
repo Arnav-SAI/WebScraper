@@ -15,13 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Set button to loading state
         scrapeBtn.disabled = true;
+        scrapeBtn.classList.add("loading");
         buttonText.textContent = "Scraping...";
-        loadingIcon.style.display = "inline-block";
+        loadingIcon.style.display = "block";
 
         jsonOutput.textContent = "{}";
 
         try {
-            const response = await fetch("/scrape", {
+            const response = await fetch("/api/scrape", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -44,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } finally {
             // Revert button to normal state
             scrapeBtn.disabled = false;
+            scrapeBtn.classList.remove("loading");
             buttonText.textContent = "Scrape";
             loadingIcon.style.display = "none";
         }

@@ -1,23 +1,41 @@
-from flask import Flask, request, jsonify
 import requests
 from bs4 import BeautifulSoup
 
-app = Flask(__name__)
-
-@app.route('/api/scrape', methods=['POST'])
-def scrape():
-    data = request.get_json()
-    url = data.get('url')
-    if not url:
-        return jsonify({"error": "URL is required"}), 400
+def handler(request):
     try:
-        response = requests.get(url, timeout=5)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
-        title = soup.title.string.strip() if soup.title else "No title found"
-        return jsonify({"title": title})
-    except requests.RequestException as e:
-        return jsonify({"error": str(e)}), 500
+        if request.method != "POST":
+            return {
+                "statusCode": 405,
+                "body": "Method Not Allowed"
+            }
 
-# Export the app for Vercel's WSGI support
-application = app
+        data = request.json
+        url = data.get("url")
+        if not url:
+            return {
+                "statusCode": 400,
+                "body": {"error": "URL is required"}
+            }
+
+        response = requests.get(url, timeout=5, headers={"User-Agent": "WebScraperAI/1.0"})
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        title = soup.title.string.strip() if soup.title else "No title found"
+        content = soup.body.get_text(strip=True)[:1000] if soup.body else "No content found"
+
+        return {
+            "statusCode": 200,
+            "body": {"title": title, "url": url, "content": content}
+        }
+
+    except requests.RequestException as e:
+        return {
+            "statusCode": 500,
+            "body": {"error": f"Failed to fetch URL: {str(e)}"}
+        }
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": {"error": f"Unexpected error: {str(e)}"}
+        }
