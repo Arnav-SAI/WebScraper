@@ -68,17 +68,17 @@ console.log(data);
 
 # 📋 Sample Output
 ```
-{
-  "success": true,
-  "url": "https://gmail.com",
-  "data": {
-    "title": "Gmail",
-    "meta": {
-      "description": "Gmail is email that’s intuitive, efficient, and useful. 15 GB of storage, less spam, and mobile access."
-    },
-    "content": {}
-  }
-}
+"json-structure">{
+  "success""json-structure">: true"json-structure">,
+  "url""json-structure">: "https">://gmail.com""json-structure">,
+  "data""json-structure">: "json-structure">{
+    "title""json-structure">: "Gmail""json-structure">,
+    "meta""json-structure">: "json-structure">{
+      "description""json-structure">: "Gmail is email that’s intuitive">, efficient">, and useful. 15 GB of storage">, less spam">, and mobile access."
+    "json-structure">}"json-structure">,
+    "content""json-structure">: "json-structure">{"json-structure">}
+  "json-structure">}
+"json-structure">}
 ```
 <br>
 
