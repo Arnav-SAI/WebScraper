@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Scraper</title>
+    <title>Web Scraper</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Geist+Mono:wght@400&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="stylesheet" href="/public/css/styles.css" />
   </head>
   <body>
-    <nav class="container">
-      <a href="/" class="item active" style="margin-right: 4px !important">
+    <nav class="navbar">
+      <a href="/" class="nav-item active">
         <svg
           class="icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -29,14 +29,8 @@
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
       </a>
-      <div class="seperator"></div>
-      <a
-        href="https://github.com/Arnav-SAI/data-ai/main/README.md"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="item"
-        style="margin-right: 6px !important; margin-left: 4px !important"
-      >
+      <div class="separator"></div>
+      <a href="#" class="nav-item">
         <svg
           class="icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -56,15 +50,9 @@
           <path d="M14 8v8"></path>
           <path d="M18 8v8"></path>
         </svg>
-        <div class="text">How</div>
+        <span class="nav-text">How</span>
       </a>
-      <a
-        href="https://github.com/Arnav-SAI/data-ai/main/README.md"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="item"
-        style="margin-right: 6px !important"
-      >
+      <a href="#" class="nav-item">
         <svg
           class="icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -89,14 +77,9 @@
           <path d="M9 21V3"></path>
           <path d="M12 3v18"></path>
         </svg>
-        <div class="text">Examples</div>
+        <span class="nav-text">Examples</span>
       </a>
-      <a
-        href="https://github.com/Arnav-SAI/data-ai"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="item"
-      >
+      <a href="#" class="nav-item">
         <svg
           class="icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -113,24 +96,25 @@
           <path d="M3 9h18"></path>
           <path d="M9 21V9"></path>
         </svg>
-        <div class="text">Github</div>
+        <span class="nav-text">Github</span>
       </a>
     </nav>
-    <main class="containerText">
-      <div class="textTop">Dive Deep into Web Data</div>
-      <div class="textBottom">
+    <main class="main-content">
+      <h1 class="heading">Dive Deep into Web Data</h1>
+      <p class="description">
         Transform any webpage into structured JSON with precision. Extract full
         content or just what you need—clean, fast, and AI-powered.
-      </div>
-      <div class="inputContainer">
-        https://
+      </p>
+      <div class="input-box">
+        <span class="prefix">https://</span>
         <input
+          type="text"
           id="url-input"
-          class="websiteInput"
-          spellcheck="false"
+          class="url-input"
           placeholder=""
+          spellcheck="false"
         />
-        <button id="scrape-btn" class="diveButton">
+        <button id="scrape-btn" class="scrape-button">
           <span class="button-text">Scrape</span>
           <svg
             class="loading-icon"
@@ -148,8 +132,8 @@
           </svg>
         </button>
       </div>
-      <div class="code-container">
-        <button id="copy-btn" class="copy">
+      <div class="output-box">
+        <button id="copy-btn" class="copy-button">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -170,6 +154,6 @@
         <pre id="json-output">{}</pre>
       </div>
     </main>
-    <script src="/static/js/script.js"></script>
+    <script src="/public/js/script.js"></script>
   </body>
 </html>

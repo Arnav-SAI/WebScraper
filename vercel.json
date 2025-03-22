@@ -6,7 +6,7 @@
         "use": "@vercel/node"
       },
       {
-        "src": "static/**",
+        "src": "public/**",
         "use": "@vercel/static"
       },
       {
@@ -20,8 +20,8 @@
         "dest": "api/scrape.js"
       },
       {
-        "src": "/static/(.*)",
-        "dest": "/static/$1",
+        "src": "/public/(.*)",
+        "dest": "/public/$1",
         "headers": {
           "Cache-Control": "public, max-age=31536000"
         }
