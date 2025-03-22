@@ -53,17 +53,23 @@ module.exports = async (req, res) => {
     $('script, style, noscript, iframe, [hidden], [aria-hidden="true"]').remove();
 
     // Remove specific sections like language dropdown and footer
-    // Gmail uses a <select> for languages and a footer for "Help Privacy Terms"
     $('select, footer, [role="contentinfo"], [aria-label="Language selection"]').remove();
 
     // Extract the page title
     const title = $('title').text().trim() || 'No title found';
     console.log('Extracted title:', title);
 
-    // Extract content from specific elements (e.g., main content area)
-    let content = '';
-    // Target main content areas, excluding navigation, headers, and footers
-    $('main, [role="main"], form, p, h1, h2, h3, h4, h5, h6, div:not([role="navigation"], [role="banner"])').each((i, elem) => {
+    // Extract content from specific elements, avoiding duplicates
+    const contentSet = new Set(); // Use a Set to avoid duplicates
+    // Target main content areas, but only process leaf nodes (elements with no children containing text)
+    const selectors = 'main, [role="main"], form, p, h1, h2, h3, h4, h5, h6, label, span, div:not([role="navigation"], [role="banner"])';
+    $(selectors).each((i, elem) => {
+      // Skip if the element has children that are also in the selector (to avoid duplicates)
+      const hasTextChildren = $(elem).children(selectors).length > 0 && $(elem).children(selectors).text().trim();
+      if (hasTextChildren) {
+        return; // Skip this element, as its children will be processed
+      }
+
       // Get text from the element
       let text = $(elem).text().trim();
       // Get placeholder text from input fields within this element
@@ -73,20 +79,26 @@ module.exports = async (req, res) => {
           text += ` ${placeholder}`;
         }
       });
-      // Add the text if it exists, with a space separator
+      // Add the text if it exists
       if (text) {
-        content += text + ' ';
+        contentSet.add(text);
       }
     });
 
+    // Convert Set to Array and join with a period and space for better readability
+    let content = Array.from(contentSet).join('. ');
     // Clean up the content
     content = content.trim();
-    // Replace multiple spaces with a single space, but preserve sentence structure
+    // Replace multiple spaces with a single space
     content = content.replace(/\s+/g, ' ');
     // Remove control characters
     content = content.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
     // If content is empty, provide a fallback
     content = content || 'No visible content found';
+    // Add a period at the end if the content doesn't already end with one
+    if (content !== 'No visible content found' && !content.endsWith('.')) {
+      content += '.';
+    }
     console.log('Extracted content length:', content.length);
 
     // Construct the JSON response
