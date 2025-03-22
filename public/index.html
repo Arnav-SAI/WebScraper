@@ -773,7 +773,7 @@
           buttonText.textContent = "Scraping...";
           loadingIcon.style.display = "inline-block";
 
-          jsonOutput.textContent = "{}"; // Reset output
+          jsonOutput.innerHTML = syntaxHighlight(JSON.stringify({}, null, 2)); // Reset output with highlighted JSON
 
           try {
             const response = await fetch("/api/scrape", {
@@ -794,7 +794,7 @@
 
             const data = await response.json();
             const formattedJson = JSON.stringify(data, null, 2);
-            jsonOutput.innerHTML = syntaxHighlight(formattedJson); // Use innerHTML to render the highlighted JSON
+            jsonOutput.innerHTML = syntaxHighlight(formattedJson); // Render the highlighted JSON
           } catch (error) {
             const errorJson = JSON.stringify({ error: error.message }, null, 2);
             jsonOutput.innerHTML = syntaxHighlight(errorJson);
@@ -806,37 +806,43 @@
           }
         });
 
+        // Copy functionality - Copy the raw JSON text, not the highlighted HTML
         copyBtn.addEventListener("click", () => {
-          const text = jsonOutput.textContent;
-          navigator.clipboard.writeText(text).then(() => {
+          // Get the raw JSON text by parsing the innerText of the pre element
+          const rawJson = jsonOutput.innerText;
+          navigator.clipboard.writeText(rawJson).then(() => {
             alert("Copied to clipboard!");
           });
         });
 
         function syntaxHighlight(json) {
-          // First, wrap structural characters ({, }, [, ], :, ,) in a span with class "json-structure"
-          json = json.replace(
-            /([\{\}\[\]\:\,])/g,
-            '<span class="json-structure">$1</span>'
-          );
-          // Then, apply syntax highlighting for other JSON elements
-          json = json.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
+          // Escape HTML characters to prevent rendering issues
+          json = json
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+          // Apply syntax highlighting for JSON elements
           return json.replace(
-            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
-            function (match) {
+            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)|([\{\}\[\]\:\,])/g,
+            function (match, valueMatch, structureMatch) {
+              if (structureMatch) {
+                // Highlight structural characters ({, }, [, ], :, ,)
+                return `<span class="json-structure">${structureMatch}</span>`;
+              }
+              // Highlight values (keys, strings, numbers, booleans, null)
               let cls = "json-number";
-              if (/^"/.test(match)) {
-                if (/:$/.test(match)) {
+              if (/^"/.test(valueMatch)) {
+                if (/:$/.test(valueMatch)) {
                   cls = "json-key";
                 } else {
                   cls = "json-string";
                 }
-              } else if (/true|false/.test(match)) {
+              } else if (/true|false/.test(valueMatch)) {
                 cls = "json-boolean";
-              } else if (/null/.test(match)) {
+              } else if (/null/.test(valueMatch)) {
                 cls = "json-null";
               }
-              return '<span class="' + cls + '">' + match + "</span>";
+              return `<span class="${cls}">${valueMatch}</span>`;
             }
           );
         }
