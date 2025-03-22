@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
 
     // Fetch the webpage with proper headers
     const response = await axios.get(targetUrl, {
-      timeout: 10000, // Increase timeout to 10 seconds
+      timeout: 10000, // 10 seconds timeout
       maxRedirects: 5, // Follow up to 5 redirects
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -49,20 +49,43 @@ module.exports = async (req, res) => {
     const $ = cheerio.load(html);
     console.log('Loaded HTML into Cheerio');
 
-    // Remove script and style tags to avoid capturing JavaScript/CSS
+    // Remove script, style, and other non-visible elements
     $('script, style, noscript, iframe, [hidden], [aria-hidden="true"]').remove();
+
+    // Remove specific sections like language dropdown and footer
+    // Gmail uses a <select> for languages and a footer for "Help Privacy Terms"
+    $('select, footer, [role="contentinfo"], [aria-label="Language selection"]').remove();
 
     // Extract the page title
     const title = $('title').text().trim() || 'No title found';
     console.log('Extracted title:', title);
 
-    // Extract the main content (body text) and clean it up
-    let content = $('body').text().trim();
-    // Replace multiple spaces, newlines, and tabs with a single space
-    content = content.replace(/\s+/g, ' ').trim();
-    // Remove any remaining non-visible characters (e.g., control characters)
+    // Extract content from specific elements (e.g., main content area)
+    let content = '';
+    // Target main content areas, excluding navigation, headers, and footers
+    $('main, [role="main"], form, p, h1, h2, h3, h4, h5, h6, div:not([role="navigation"], [role="banner"])').each((i, elem) => {
+      // Get text from the element
+      let text = $(elem).text().trim();
+      // Get placeholder text from input fields within this element
+      $(elem).find('input[placeholder], textarea[placeholder]').each((j, input) => {
+        const placeholder = $(input).attr('placeholder')?.trim();
+        if (placeholder) {
+          text += ` ${placeholder}`;
+        }
+      });
+      // Add the text if it exists, with a space separator
+      if (text) {
+        content += text + ' ';
+      }
+    });
+
+    // Clean up the content
+    content = content.trim();
+    // Replace multiple spaces with a single space, but preserve sentence structure
+    content = content.replace(/\s+/g, ' ');
+    // Remove control characters
     content = content.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
-    // If content is empty, provide a fallback message
+    // If content is empty, provide a fallback
     content = content || 'No visible content found';
     console.log('Extracted content length:', content.length);
 
