@@ -95,6 +95,11 @@
         background-color: rgba(15, 15, 15, 0.73);
         align-items: center;
         z-index: 1000;
+        transition: transform 0.3s ease; /* Smooth transition for show/hide */
+      }
+
+      .navbar.hidden {
+        transform: translateX(-50%) translateY(-100%); /* Hide by moving up */
       }
 
       .nav-item {
@@ -335,7 +340,7 @@
       /* Responsive Design */
       @media (max-width: 768px) {
         body {
-          padding-top: 140px; /* Reduced from 180px to bring navbar closer to content */
+          padding-top: 0; /* Remove padding since navbar will be fixed but hidden on scroll */
         }
 
         .navbar {
@@ -343,7 +348,10 @@
           align-items: center;
           width: 90%;
           padding: 10px;
-          top: 30px; /* Reduced from 40px to bring navbar closer to content */
+          top: 0; /* Position at the very top for mobile */
+          left: 50%;
+          transform: translateX(-50%);
+          position: fixed; /* Keep fixed for scroll behavior */
         }
 
         .nav-item {
@@ -372,7 +380,7 @@
         }
 
         .main-content {
-          margin-top: 100px; /* Reduced from 120px to bring content closer to navbar */
+          margin-top: 150px; /* Adjust to account for navbar height when visible */
         }
 
         .heading {
@@ -419,13 +427,13 @@
 
       @media (max-width: 480px) {
         body {
-          padding-top: 160px; /* Reduced from 200px to bring navbar closer to content */
+          padding-top: 0;
         }
 
         .navbar {
           width: 95%;
           padding: 8px;
-          top: 40px; /* Reduced from 50px to bring navbar closer to content */
+          top: 0;
         }
 
         .nav-item {
@@ -444,7 +452,7 @@
         }
 
         .main-content {
-          margin-top: 110px; /* Reduced from 140px to bring content closer to navbar */
+          margin-top: 140px; /* Adjust for smaller navbar height */
         }
 
         .heading {
@@ -635,7 +643,7 @@
       </div>
     </main>
     <script>
-      // Inline JavaScript (unchanged)
+      // Inline JavaScript
       document.addEventListener("DOMContentLoaded", () => {
         const urlInput = document.getElementById("url-input");
         const scrapeBtn = document.getElementById("scrape-btn");
@@ -643,7 +651,34 @@
         const copyBtn = document.getElementById("copy-btn");
         const buttonText = scrapeBtn.querySelector(".button-text");
         const loadingIcon = scrapeBtn.querySelector(".loading-icon");
+        const navbar = document.querySelector(".navbar");
 
+        // Scroll behavior for mobile
+        let lastScrollTop = 0;
+        let isMobile = window.innerWidth <= 768;
+
+        // Update isMobile on window resize
+        window.addEventListener("resize", () => {
+          isMobile = window.innerWidth <= 768;
+        });
+
+        window.addEventListener("scroll", () => {
+          if (!isMobile) return; // Only apply on mobile
+
+          let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+          if (currentScrollTop > lastScrollTop) {
+            // Scrolling down
+            navbar.classList.add("hidden");
+          } else {
+            // Scrolling up
+            navbar.classList.remove("hidden");
+          }
+
+          lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; // Prevent negative scroll values
+        });
+
+        // Existing scrape functionality
         scrapeBtn.addEventListener("click", async () => {
           const url = "https://" + urlInput.value.trim();
           if (!urlInput.value) {
