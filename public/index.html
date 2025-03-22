@@ -618,7 +618,7 @@
         <span class="nav-text">How</span>
       </a>
       <a
-        href="https://github.com/Arnav-SAI/WebScraper?tab=readme-ov-file#-usage"
+        href="https://github.com/Arnav-SAI/WebScraper/blob/main/README.md"
         class="nav-item desktop-only"
         target="_blank"
         rel="noopener noreferrer"
@@ -650,7 +650,7 @@
         <span class="nav-text">Examples</span>
       </a>
       <a
-        href="https://github.com/Arnav-SAI/WebScraper"
+        href="https://github.com/Arnav-SAI/WebScraper/blob/main/README.md"
         class="nav-item"
         target="_blank"
         rel="noopener noreferrer"
@@ -726,7 +726,7 @@
             ></path>
           </svg>
         </button>
-        <pre id="json-output">{}</pre>
+        <pre id="json-output"></pre>
       </div>
     </main>
     <script>
@@ -773,7 +773,8 @@
           buttonText.textContent = "Scraping...";
           loadingIcon.style.display = "inline-block";
 
-          jsonOutput.innerHTML = syntaxHighlight(JSON.stringify({}, null, 2)); // Reset output with highlighted JSON
+          // Clear the output box while scraping
+          jsonOutput.innerHTML = ""; // Set to empty string to make the output box blank
 
           try {
             const response = await fetch("/api/scrape", {
@@ -793,7 +794,7 @@
 
             const data = await response.json();
             const formattedJson = JSON.stringify(data, null, 2);
-            jsonOutput.innerHTML = syntaxHighlight(formattedJson); // Render the highlighted JSON
+            jsonOutput.innerHTML = syntaxHighlight(formattedJson); // Display the final data after scraping
           } catch (error) {
             const errorJson = JSON.stringify({ error: error.message }, null, 2);
             jsonOutput.innerHTML = syntaxHighlight(errorJson);
@@ -816,9 +817,9 @@
         function syntaxHighlight(json) {
           // Escape HTML characters to prevent rendering issues
           json = json
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
+            .replace(/&/g, "&")
+            .replace(/</g, "<")
+            .replace(/>/g, ">");
 
           // First, highlight structural characters ({, }, [, ], :, ,)
           json = json.replace(
