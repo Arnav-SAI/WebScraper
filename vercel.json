@@ -2,15 +2,23 @@
     "version": 2,
     "builds": [
       {
-        "src": "api/scrape.py",
-        "use": "@vercel/python"
+        "src": "api/scrape.js",
+        "use": "@vercel/node"
       },
       {
         "src": "static/**",
         "use": "@vercel/static"
+      },
+      {
+        "src": "index.html",
+        "use": "@vercel/static"
       }
     ],
     "routes": [
+      {
+        "src": "/api/scrape",
+        "dest": "api/scrape.js"
+      },
       {
         "src": "/static/(.*)",
         "dest": "/static/$1"
