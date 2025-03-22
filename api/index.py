@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Determine the absolute path to the templates and static directories
+# Determine absolute paths for templates and static files
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "..", "templates")
 STATIC_DIR = os.path.join(BASE_DIR, "..", "static")
@@ -18,9 +18,9 @@ logger.info(f"Templates directory: {TEMPLATES_DIR}")
 logger.info(f"Static directory: {STATIC_DIR}")
 
 app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=STATIC_DIR)
-CORS(app)  # Enable CORS for API requests
+CORS(app)  # Enable CORS for frontend requests
 
-# Health check endpoint for Vercel
+# Health check endpoint
 @app.route("/health")
 def health():
     logger.info("Health check endpoint accessed")
@@ -51,7 +51,6 @@ def scrape():
         response.raise_for_status()
 
         soup = BeautifulSoup(response.text, "html.parser")
-
         title = soup.title.string if soup.title else "No title found"
         content = soup.body.get_text(strip=True)[:1000] if soup.body else "No content found"
 
