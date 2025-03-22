@@ -335,52 +335,47 @@
       /* Responsive Design */
       @media (max-width: 768px) {
         body {
-          padding-top: 180px; /* Increased to account for stacked navbar height */
+          padding-top: 60px; /* Reduced padding since navbar remains horizontal */
         }
 
         .navbar {
-          flex-direction: column; /* Stack items vertically */
-          align-items: center;
-          width: 90%;
-          padding: 10px;
-          top: 40px; /* Lower the navbar on mobile */
+          padding: 3px; /* Smaller padding on mobile */
+          top: 10px;
+          width: 90%; /* Ensure navbar fits within mobile screen */
+          max-width: 400px; /* Prevent it from becoming too wide */
         }
 
         .nav-item {
-          margin-right: 0;
-          margin-bottom: 8px;
-          width: 100%;
-          justify-content: center;
-        }
-
-        .nav-item:last-child {
-          margin-bottom: 0;
+          padding: 0 8px; /* Reduced padding */
+          height: 24px; /* Smaller height */
+          margin-right: 4px;
         }
 
         .nav-item .icon {
-          width: 12px;
+          width: 12px; /* Smaller icon */
           height: 12px;
         }
 
         .nav-item .nav-text {
-          font-size: 0.75rem;
+          font-size: 0.75rem; /* 12px */
           margin-left: 5px;
         }
 
         .separator {
-          display: none; /* Hide separator on mobile */
+          height: 12px; /* Smaller separator */
+          margin: 0 3px;
         }
 
         .main-content {
-          margin-top: 120px; /* Ensure content starts below the stacked navbar */
+          margin-top: 50px; /* Ensure content starts below the navbar */
         }
 
         .heading {
-          font-size: 2.5rem;
+          font-size: 2.5rem; /* 40px */
         }
 
         .description {
-          font-size: 1rem;
+          font-size: 1rem; /* 16px */
           max-width: 90%;
         }
 
@@ -419,18 +414,18 @@
 
       @media (max-width: 480px) {
         body {
-          padding-top: 200px; /* Further adjust for smaller screens */
+          padding-top: 50px; /* Further adjust for smaller screens */
         }
 
         .navbar {
+          padding: 2px;
           width: 95%;
-          padding: 8px;
-          top: 50px; /* Lower the navbar further on smaller screens */
+          max-width: 350px;
         }
 
         .nav-item {
-          height: 28px;
-          padding: 0 10px;
+          padding: 0 6px;
+          height: 20px;
         }
 
         .nav-item .icon {
@@ -439,20 +434,25 @@
         }
 
         .nav-item .nav-text {
-          font-size: 0.65rem;
+          font-size: 0.65rem; /* 10.4px */
           margin-left: 4px;
         }
 
+        .separator {
+          height: 10px;
+          margin: 0 2px;
+        }
+
         .main-content {
-          margin-top: 140px; /* Adjust for smaller navbar height */
+          margin-top: 40px;
         }
 
         .heading {
-          font-size: 1.8rem;
+          font-size: 1.8rem; /* 28.8px */
         }
 
         .description {
-          font-size: 0.9rem;
+          font-size: 0.9rem; /* 14.4px */
         }
 
         .input-box {
