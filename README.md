@@ -1,3 +1,4 @@
+
 # 🕸️ WebScraper
 webscraper is a streamlined tool for 🌐 web scraping, transforming unstructured websites into 📋 structured JSON data. Easily extract page titles, meta descriptions, and more with a user-friendly interface and API.
 <br>
